@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {writeFileSync} from 'node:fs';
+import {writeFileSync,readFileSync} from 'node:fs';
 import path from 'node:path';
 import {migrate} from './migrate.mjs';
 import {seed} from './seed.mjs';
@@ -51,7 +51,7 @@ export async function checkDomain(db,temp){
  const changed=path.join(temp,'changed.csv');writeFileSync(changed,'Request ID,Request Name,Business Unit,Status,Custom objective\nDEMO-901,Changed upstream title,Service,Declined,New objective\n');
  assert.equal((await tx(()=>importCognota(db,changed,{workspace:'fixture'}))).updated,1);
  assert.equal((await resolve(db,'requests',imported.code)).title,'Customer welcome, first week');assert.equal((await resolve(db,'requests',imported.code)).purpose,'Local purpose');
- const raw=(await db.query("select raw from source_requests where source_key='DEMO-902'"))[0].raw;assert.equal(raw['Custom objective'],'First line\nSecond line');ok('import preview, repeat import, source revisions and local decisions');
+ const raw=(await db.query("select raw from source_requests where source_key='DEMO-902'"))[0].raw;assert.equal(raw['Custom objective'],readFileSync(demo,'utf8').match(/First line(\r?\n)Second line/)[0]);ok('import preview, repeat import, source revisions and local decisions');
  for(const [name,csv,re]of [
  ['duplicate','Request ID,Request Name\nX,One\nX,Two\n',/Duplicate source/],
  ['missing','Request ID,Request Name\nX,One\n,Two\n',/stable request/],
@@ -60,6 +60,9 @@ export async function checkDomain(db,temp){
   const file=path.join(temp,name+'.csv');writeFileSync(file,csv);const count=(await db.query('select count(*) n from requests'))[0].n;
   await bad(()=>importCognota(db,file,{workspace:'fixture'}),re);assert.equal((await db.query('select count(*) n from requests'))[0].n,count);
  }
+ const crlf=path.join(temp,'crlf.csv');writeFileSync(crlf,'Request ID,Request Name,Note\r\nCRLF-1,Windows export,"First\r\nSecond"\r\n');
+ await tx(()=>importCognota(db,crlf,{workspace:'line-endings'}));
+ assert.equal((await db.query("select raw from source_requests where source_key='CRLF-1'"))[0].raw.Note,'First\r\nSecond');
  const mapFile=path.join(temp,'mapped.csv');writeFileSync(mapFile,'Record key,Subject,Extra\nCUSTOM-1,Unicode kōrero,<script>alert(1)</script>\n');
  await tx(()=>importCognota(db,mapFile,{workspace:'mapped',map:{id:'Record key',title:'Subject'}}));
  await bad(()=>importCognota(db,mapFile,{workspace:'mapped',map:{id:'Absent',title:'Subject'}}),/absent/);ok('CSV failures roll back and explicit header mapping works');

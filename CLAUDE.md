@@ -1,43 +1,57 @@
-# Learning Operations for Claude Code: operating instructions
+# Learning Operations for Claude Code
 
-This file is the brain. Claude Code reads it at the start of every session. It says who this is for, how work gets done, and the one right way to do each recurring job.
+A trusted operator desk for training demand, production capacity, investment and outcome reviews. Read docs/cli.md before a write. All answers start from the current CLI records.
 
-## Who this is for
+## Recurring jobs
 
-- **Business:** [YOUR BUSINESS]
-- **Operator:** [YOUR NAME], [your role]
-- **What matters most:** [the one or two outcomes you care about]
-
-Fill this in once. A worker with context knows. A worker without it guesses.
-
-## How to work
-
-1. **Take a brief, not a script.** The operator describes the outcome. You run the right command and present the answer.
-2. **Read before you write.** Before drafting anything about a record, read its full history first.
-3. **Plain language.** Short sentences. No filler. Numbers in tables.
-4. **Silent success, loud problems.** No play-by-play. Say what broke and what you did about it.
-5. **Stop at the line.** Anything that sends, deletes, or faces a customer waits for a yes in this session.
-
-## Routing table: one right way for each recurring job
-
-| When the operator asks for... | Use this |
+| Ask | Route |
 |---|---|
-| <!-- TODO(author): one row per slash command --> | `/...` |
+| `/people` | Read the learning team, available hours and labour rates. |
+| `/intake` | Read all requests and their decision status. |
+| `/demand-review` | Prepare the weekly demand triage in priority and waiting-time order. |
+| `/projects` | Read the learning production portfolio. |
+| `/capacity-plan` | Plan the next four weeks from net weekly hours and assigned work. |
+| `/allocations` | Read weekly project assignments. |
+| `/time` | Read recorded production time. |
+| `/budget-review` | Compare approved budgets with labour and external commitments. |
+| `/costs` | Read external commitments and paid costs. |
+| `/delivery-due` | Review delivery milestones and their evidence. |
+| `/impact-review` | Review planned measurements and observed outcomes. |
+| `/compliance` | Check purpose, retention reviews, accountable owners and safety training briefs. |
+| `/attention` | Read stale requests, late milestones, budget exceptions and overdue evaluations. |
+| `/history` | Read preserved Cognota source fields. |
+| `/weekly-review` | Prepare the Monday demand, capacity, budget and impact meeting. |
+| `/insights` | Answer ten cross-record business questions. |
+| `/request` | Read a request with its projects, notes and original export fields. |
+| `/add` | Read docs/cli.md. Write the operator-approved fields to a private JSON file, then add one record. Do not invent evidence or people. |
+| `/amend-request` | Complete the owner, purpose, retention review date and safety brief before a decision. |
+| `/decide-request` | Read the request and compliance checks. Record the explicit operator decision and reason. |
+| `/start-project` | Read the approved request and plan, then record the operator decision to start. |
+| `/complete-project` | Read milestones and evidence first. Complete only an active project whose delivery has been accepted. |
+| `/complete-milestone` | Read the milestone, inspect the evidence, and record the operator acceptance. |
+| `/pay-cost` | Record a payment already made elsewhere using its evidence. This command transfers no money. |
+| `/log` | Append the operator-approved note to a request. |
+| `/import` | Read docs/replace-cognota.md. Preview the actual export with --dry-run and check counts and mapped headers. Then run the import with an actor. Preserve the same workspace name across runs. |
+| `/export` | Export the complete business record and audit history to an ignored local file. Keep it private. |
+| `/draft-weekly-review` | Read demand-review, capacity-plan and budget-review first. Then write a draft with impact and overdue exceptions. Present the result in chat. |
+| `/draft-brief` | Read the request, projects, notes and any source export. Produce a brief for human review. |
+| `/customise` | Add a field or business rule through a migration. |
+| `/new-view` | Add a read-only report. |
 
-If an ask fits nothing here, run the CLI directly (`npm run <cli> -- --help`) and then propose a new command for it.
+## Operating rules
 
-## Hard rules
+- One CLI: scripts/learning.mjs. Do not create a second workflow path.
+- Never invent an assessment, payment, decision, observed result or source record.
+- Request approvals require an owner, purpose and retention review date. Safety work also needs risk, worker input and delivery method evidence.
+- A project is approved work, not permission for someone to perform a hazardous activity. A database check is not a competence assessment.
+- Use integer cents and explicit currencies. Never add different currencies together. Rates are captured on each allocation and time record.
+- Weekly capacity is net of leave, public holidays and other duties as entered by the operator.
+- An ambiguous reference lists candidates and stops. Use an exact code.
+- Import previews roll back. Source updates preserve local decisions. Every raw source field remains in the history and audit trail.
+- Actor labels are declared by the operator, not authenticated identity. Shared use needs separately configured access and backup controls.
+- Drafts stay in drafts/. Nothing emails, pays a supplier, publishes a course or changes an outside system.
+- Personal records, exports and credentials never go into Git. Retention reviews require a human decision, not automatic deletion.
+- New schema changes use a new migration. Never disable a check to make a test pass.
+- Tests and demo use a disposable local database and ignore DATABASE_URL. Production setup runs migrate only, never seed.
 
-- Never send email or messages from here. Draft to `drafts/`, a person sends.
-- Never delete records without an explicit yes in this session. Prefer marking closed or archived.
-- Never invent a record. If a name is ambiguous, list the candidates and ask.
-- The database is the source of truth. If the answer is not in it, say so.
-
-## Where things live
-
-- `scripts/` the CLI. `scripts/lib/db.mjs` picks `DATABASE_URL` (Postgres, Supabase) or the embedded database in `.data/`.
-- `supabase/migrations/` the schema, plain SQL. `npm run migrate` applies it.
-- `.claude/commands/` the slash commands. Add one every time the same ask comes twice.
-- `docs/` the thesis and the guide for moving off Cognota.
-
-Built by Enterprise DNA. Installed and run for you as part of Omni: https://enterprisedna.co/omni/instead-of/cognota
+Built and supported through Omni by Enterprise DNA. https://enterprisedna.co/omni/instead-of/cognota

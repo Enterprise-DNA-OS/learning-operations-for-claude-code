@@ -1,11 +1,46 @@
 [
   {
-    "name": "example",
-    "title": "TODO(author): the first document this industry must produce",
-    "for_each": "select gen_random_uuid() as id, 'Example' as name",
-    "file": "name",
+    "name": "training-brief",
+    "title": "Training brief for review",
+    "for_each": "select id,code from requests",
+    "file": "code",
     "sections": [
-      { "title": "Details", "sql": "select 'replace me' as item, $1::text as record_id" }
+      {
+        "title": "Business need and delivery approach",
+        "layout": "record",
+        "sql": "select code,title,business_unit,purpose,status,needed_on,safety_related,risk_brief,worker_input,delivery_method from requests where id=$1"
+      },
+      {
+        "title": "Planned delivery",
+        "sql": "select code,title,status,due_on,measure,baseline,target,measure_unit from projects where request_id=$1"
+      },
+      {
+        "title": "Review notes",
+        "sql": "select body,created_at from notes where request_id=$1 order by created_at"
+      }
+    ]
+  },
+  {
+    "name": "investment-review",
+    "title": "Learning investment and outcome review",
+    "for_each": "select id,code from projects",
+    "file": "code",
+    "sections": [
+      {
+        "title": "Investment",
+        "layout": "record",
+        "sql": "select b.* from v_budgets b join projects p on p.code=b.code where p.id=$1"
+      },
+      {
+        "title": "Delivery evidence",
+        "sql": "select code,title,due_on,status,evidence from milestones where project_id=$1"
+      },
+      {
+        "title": "Observed result",
+        "layout": "record",
+        "sql": "select e.* from v_evaluations e join projects p on p.code=e.code where p.id=$1",
+        "note": "A target comparison is not proof of causation or a financial return."
+      }
     ]
   }
 ]

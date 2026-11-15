@@ -1,0 +1,33 @@
+node scripts/learning.mjs attention
+  code   title                        reason                         due_on    
+  -----  ---------------------------  -----------------------------  ----------
+  J-102  Service workshop delivery    outcome review overdue         2026-11-08
+  R-103  Chemical handling refresher  intake decision                2026-11-12
+  M-1    Observe induction pilot      overdue milestone              2026-11-13
+  R-104  New supervisor briefing      intake decision                2026-12-06
+  J-101  Warehouse induction pack     budget forecast exceeds limit
+
+node scripts/learning.mjs capacity-plan
+  code  name         role               week_on     weekly_hours  planned_hours  available_hours
+  ----  -----------  -----------------  ----------  ------------  -------------  ---------------
+  P-1   Alex Morgan  Learning designer  2026-11-09  32.00         24.00          8.00           
+  P-2   Alex Chen    Learning designer  2026-11-09  24.00         8.00           16.00          
+  P-3   Mere Wilson  Programme lead     2026-11-09  30.00         0              30.00          
+  P-1   Alex Morgan  Learning designer  2026-11-16  32.00         8.00           24.00          
+  P-2   Alex Chen    Learning designer  2026-11-16  24.00         0              24.00          
+  P-3   Mere Wilson  Programme lead     2026-11-16  30.00         0              30.00          
+  P-1   Alex Morgan  Learning designer  2026-11-23  32.00         0              32.00          
+  P-2   Alex Chen    Learning designer  2026-11-23  24.00         0              24.00          
+  P-3   Mere Wilson  Programme lead     2026-11-23  30.00         0              30.00          
+  P-1   Alex Morgan  Learning designer  2026-11-30  32.00         0              32.00          
+  P-2   Alex Chen    Learning designer  2026-11-30  24.00         0              24.00          
+  P-3   Mere Wilson  Programme lead     2026-11-30  30.00         0              30.00
+
+node scripts/learning.mjs compliance
+  code   rule              finding                                                               
+  -----  ----------------  ----------------------------------------------------------------------
+  R-103  OWNER             Assign an active owner                                                
+  R-103  PURPOSE           Record the operational purpose                                        
+  R-103  RETENTION_REVIEW  Set or revisit the retention review date; no automatic deletion       
+  R-103  SAFETY_BRIEF      Document risks, worker input and understandable delivery before app...
+  R-104  RETENTION_REVIEW  Set or revisit the retention review date; no automatic deletion

@@ -1,13 +1,43 @@
 [
   {
     "name": "week",
-    "title": "This week",
-    "subtitle": "Learning Operations for Claude Code: what needs attention, rendered by npm run view",
+    "title": "Learning operations: this week",
+    "subtitle": "Fictional demo unless you have imported your own records",
     "sections": [
       {
-        "title": "Needs attention",
-        "note": "TODO(author): point this at the industry's attention view (overdue, stuck, quiet).",
-        "sql": "select 'replace me' as item, 'TODO(author)' as why"
+        "title": "Decisions and overdue work",
+        "sql": "select * from v_attention order by due_on nulls last,code"
+      },
+      {
+        "title": "Capacity in the next four weeks",
+        "sql": "select * from v_capacity order by week_on,name",
+        "note": "Weekly capacity is net of leave and other duties as entered by the operator."
+      }
+    ]
+  },
+  {
+    "name": "budget",
+    "title": "Learning investment review",
+    "sections": [
+      {
+        "title": "Forecast by project",
+        "sql": "select * from v_budgets order by code",
+        "note": "Forecast takes the greater of planned and actual labour, plus paid and committed external costs. It is an estimate, grouped by each project currency, with no exchange conversion."
+      }
+    ]
+  },
+  {
+    "name": "impact",
+    "title": "Outcomes and evidence",
+    "sections": [
+      {
+        "title": "Measurement register",
+        "sql": "select * from v_evaluations order by evaluation_on",
+        "note": "Observed changes do not establish that training caused the change."
+      },
+      {
+        "title": "Records requiring review",
+        "sql": "select * from v_compliance order by code,rule"
       }
     ]
   }
